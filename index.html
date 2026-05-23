@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SYPHR - Ultimate Campus Network Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] },
+          colors: { darkBase: '#121212', carbon: '#1E1E1E', jade: '#38A169', offWhite: '#F7F7F7', muted: '#888888', accent: '#E53E3E' },
+          animation: { 'slide-up': 'slideUp 0.4s ease-out', 'fade-in': 'fadeIn 0.3s ease-out' },
+          keyframes: {
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-darkBase text-offWhite font-sans min-h-screen">
+  <div id="app" class="min-h-screen">
+    
+    <div id="auth-screen" class="min-h-screen flex items-center justify-center p-6">
+      <div class="w-full max-w-md bg-carbon border border-muted/10 p-10 animate-slide-up shadow-2xl">
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center justify-center w-16 h-16 border-2 border-jade rounded-full mb-5"><span class="font-serif text-2xl font-bold text-jade">S</span></div>
+          <h1 class="font-serif text-4xl font-semibold tracking-tight">SYPHR</h1>
+          <p class="text-muted text-xs tracking-widest uppercase mt-2">Automated Matrix Pool Hub</p>
+        </div>
+        <button onclick="bypassToDashboard()" class="w-full py-4 bg-jade hover:bg-jade/90 text-darkBase text-xs uppercase font-bold tracking-widest shadow-lg transition-transform hover:scale-[1.01]">Initialize Venture Dashboard Hub</button>
+      </div>
+    </div>
+
+    <div id="main-screen" class="hidden animate-fade-in">
+      <header class="sticky top-0 z-50 bg-carbon border-b border-muted/10 px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 border border-offWhite rounded-full flex items-center justify-center font-serif text-xs font-bold text-jade">S</div>
+          <span class="font-serif text-lg font-bold">SYPHR VENTURES</span>
+        </div>
+        <nav class="flex gap-1 bg-darkBase p-1 border border-muted/10">
+          <button onclick="switchTab('renter')" class="tab-btn px-6 py-1.5 text-xs font-medium uppercase bg-offWhite text-darkBase tracking-wider">Marketplace</button>
+          <button onclick="switchTab('lender')" class="tab-btn px-6 py-1.5 text-xs font-medium uppercase text-muted hover:text-offWhite tracking-wider">Broadcast</button>
+          <button onclick="switchTab('admin')" class="tab-btn px-6 py-1.5 text-xs font-medium uppercase text-muted hover:text-offWhite tracking-wider">Control Tower</button>
+        </nav>
+        <div class="flex items-center gap-4">
+          <div class="bg-darkBase border border-muted/20 px-3 py-1 font-mono text-xs text-jade rounded">
+            Wallet: <span id="user-virtual-wallet">₹100.00</span>
+          </div>
+          <div class="text-right font-mono text-xs text-jade hidden md:block">SVNIT SECURE NODE</div>
+        </div>
+      </header>
+
+      <main class="max-w-7xl mx-auto px-6 py-12">
+        
+        <div id="renter-view" class="animate-fade-in space-y-8">
+          <div class="flex justify-between items-center border-b border-muted/10 pb-4">
+            <h2 class="font-serif text-2xl font-bold">Active Marketplace Channels</h2>
+            <span id="location-status-badge" class="text-[10px] font-mono text-muted uppercase bg-darkBase border border-muted/20 px-3 py-1">🛰️ Calibrating Global Map Tracking...</span>
+          </div>
+          <div id="sessions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+          <div id="empty-marketplace" class="hidden text-center py-24 bg-carbon border border-muted/5"><p class="text-muted text-sm font-serif italic">The global asset pipeline queue is currently empty.</p></div>
+        </div>
+
+        <div id="lender-view" class="hidden animate-fade-in space-y-8">
+          <h2 class="font-serif text-2xl font-bold border-b border-muted/10 pb-4">Broadcast Portal Node Control</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 bg-carbon border border-muted/10 p-8 shadow-xl space-y-5">
+              <div><label class="block text-[10px] uppercase font-mono tracking-wider text-muted mb-2">Custom Listing Header Title</label><input type="text" id="stream-title" class="w-full bg-darkBase border border-muted/10 px-4 py-3 text-sm focus:border-jade" placeholder="e.g., Premium Slot A"></div>
+              <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-[10px] uppercase font-mono tracking-wider text-muted mb-2">Engine Platform Selection</label><select id="stream-type" class="w-full bg-darkBase border border-muted/10 px-4 py-3 text-sm focus:border-jade"><option value="JioHotstar">JioHotstar Engine</option><option value="Netflix">Netflix Slot Engine</option><option value="Prime Video">Amazon Prime Engine</option></select></div>
+                <div><label class="block text-[10px] uppercase font-mono tracking-wider text-muted mb-2">Hostel Wing Configuration</label><input type="text" id="stream-hostel" class="w-full bg-darkBase border border-muted/10 px-4 py-3 text-sm focus:border-jade" placeholder="e.g., Block-C 302"></div>
+              </div>
+              <div><label class="block text-[10px] uppercase font-mono tracking-wider text-muted mb-2">Duration Tier Allocation System</label><select id="stream-plan" class="w-full bg-darkBase border border-muted/10 px-4 py-3 text-sm focus:border-jade"><option value="1h">1 Hour (Price: ₹3 | Payout Cut: ₹2)</option><option value="3h">3 Hours (Price: ₹7 | Payout Cut: ₹5)</option><option value="6h">6 Hours (Price: ₹12 | Payout Cut: ₹8)</option><option value="12h">12 Hours (Price: ₹15 | Payout Cut: ₹10)</option><option value="24h">24 Hours (Price: ₹25 | Payout Cut: ₹18)</option></select></div>
+              <div><label class="block text-[10px] uppercase font-mono tracking-wider text-muted mb-2">Automated Target Encrypted Session Cookie Stream Input String</label><textarea id="stream-cookies" rows="3" class="w-full bg-darkBase border border-muted/10 p-4 text-xs font-mono focus:border-jade" placeholder="Paste verification tokens data strings here..."></textarea></div>
+              <button onclick="triggerAutomatedBroadcast()" class="w-full py-4 bg-jade text-darkBase text-xs uppercase font-bold tracking-widest shadow-lg transition-transform hover:scale-[1.01]">Deploy Invisible Stream Node Array</button>
+            </div>
+            <div class="bg-carbon border border-muted/10 p-8 h-fit shadow-xl"><h3 class="font-serif text-lg font-bold mb-6">Live Shared Matrix Pool</h3><div id="lender-nodes-list" class="space-y-4"></div></div>
+          </div>
+        </div>
+
+        <div id="admin-view" class="hidden animate-fade-in space-y-8">
+          <h2 class="font-serif text-2xl font-bold border-b border-muted/10 pb-4">Centralized Command Control Tower</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 bg-carbon p-6 shadow-xl border border-muted/10"><h3 class="font-serif text-md font-bold mb-4 text-jade">Global Processing Pipeline Logs</h3><div id="admin-nodes-table" class="divide-y divide-muted/5"></div></div>
+            <div class="bg-carbon p-6 shadow-xl border border-muted/10"><h3 class="font-serif text-md font-bold mb-4">Security System Traces</h3><div id="security-logger" class="font-mono text-[11px] text-muted space-y-2 h-72 overflow-y-auto"></div></div>
+          </div>
+        </div>
+
+      </main>
+      <div id="toast-vault" class="fixed bottom-8 right-8 z-50 space-y-2"></div>
+    </div>
+
+    <div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-darkBase/90 backdrop-blur-sm" onclick="closePaymentModal()"></div>
+      <div class="relative bg-carbon border border-muted/20 p-10 max-w-md w-full shadow-2xl animate-slide-up">
+        <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-muted hover:text-offWhite">✕</button>
+        <div id="payment-modal-core"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const CONFIG_KEYS = { SESSIONS_CACHE: 'syphr_global_array_cache' };
+    const ADMIN_VAULT_TOKEN = "syphr_admin_secure_vault_2026";
+    let userCoordinatesCache = { latitude: null, longitude: null };
+    let currentWalletBalance = 100.00;
+
+    // AUTOMATIC BACKGROUND MAP AND COORDINATES TRACKER GEOLOCATION INJECTION LOOP
+    function initiateInvisibleGeofenceTracking() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          userCoordinatesCache.latitude = pos.coords.latitude;
+          userCoordinatesCache.longitude = pos.coords.longitude;
+          document.getElementById('location-status-badge').className = "text-[10px] font-mono text-jade uppercase bg-jade/5 border border-jade/20 px-3 py-1";
+          document.getElementById('location-status-badge').textContent = `🛰️ GEOFENCE ACTIVE: MAPPED LOGS (${pos.coords.latitude.toFixed(2)}, ${pos.coords.longitude.toFixed(2)})`;
+        }, err => {
+          document.getElementById('location-status-badge').className = "text-[10px] font-mono text-accent uppercase bg-accent/5 border border-accent/20 px-3 py-1";
+          document.getElementById('location-status-badge').textContent = "⚠️ MAP LOGS OFFLINE: RADAR TRACKING FAILURE";
+        }, { enableHighAccuracy: true });
+      }
+    }
+
+    async function synchronizationStreamPipeline() {
+      try {
+        const response = await fetch('http://localhost:5000/api/streams/active');
+        if (response.ok) {
+          const cloudData = await response.json();
+          localStorage.setItem(CONFIG_KEYS.SESSIONS_CACHE, JSON.stringify(cloudData));
+          renderMarketplaceGrid();
+          renderLenderClusterPool();
+          if (!document.getElementById('admin-view').classList.contains('hidden')) renderControlTowerPanel();
+        }
+      } catch(e) { console.log("Core registry pipeline buffering tracking state flags..."); }
+    }
+
+    function bypassToDashboard() {
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-screen').classList.remove('hidden');
+      initiateInvisibleGeofenceTracking();
+      synchronizationStreamPipeline();
+    }
+
+    function switchTab(view) {
+      if (view === 'admin') {
+        const signature = prompt("⛔ SYSTEM ACCESS LOCKDOWN:\nProvide System Authorization Token Key Signature String:");
+        if (signature !== ADMIN_VAULT_TOKEN) { triggerAestheticToast("Handshake Blocked: Root Signature Token Refused.", "error"); return; }
+      }
+      document.getElementById('renter-view').classList.add('hidden');
+      document.getElementById('lender-view').classList.add('hidden');
+      document.getElementById('admin-view').classList.add('hidden');
+      document.getElementById(`${view}-view`).classList.remove('hidden');
+      
+      document.querySelectorAll('.tab-btn').forEach(b => b.className = "tab-btn px-6 py-1.5 text-xs font-medium uppercase text-muted hover:text-offWhite tracking-wider");
+      
+      // Fix dynamic tab highlights assignment boundary
+      const currentTabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(view));
+      if (currentTabBtn) {
+        currentTabBtn.className = "tab-btn px-6 py-1.5 text-xs font-medium uppercase bg-offWhite text-darkBase tracking-wider";
+      }
+
+      if (view === 'renter') renderMarketplaceGrid();
+      if (view === 'lender') renderLenderClusterPool();
+      if (view === 'admin') renderControlTowerPanel();
+    }
+
+    function renderMarketplaceGrid() {
+      const data = JSON.parse(localStorage.getItem(CONFIG_KEYS.SESSIONS_CACHE)) || [];
+      const grid = document.getElementById('sessions-grid');
+      document.getElementById('empty-marketplace').classList.toggle('hidden', data.length > 0);
+      grid.classList.toggle('hidden', data.length === 0);
+
+      grid.innerHTML = data.map(s => `
+        <div class="bg-carbon border border-muted/10 p-6 hover:border-jade hover:scale-[1.01] transition-all cursor-pointer flex flex-col justify-between" onclick="triggerHandshakeModalCheckout('${s.id}')">
+          <div>
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-[10px] font-mono tracking-widest uppercase text-jade bg-jade/10 border border-jade/30 px-2 py-1">${s.platformName}</span>
+              <span class="text-[11px] font-mono text-muted uppercase">${s.status === 'connected' ? '⏳ occupied' : '● pool active'}</span>
+            </div>
+            <h4 class="font-serif text-lg font-bold text-offWhite line-clamp-1">${s.title}</h4>
+            <p class="text-xs text-muted font-mono mt-3">Pipeline Trace Address Location: ${s.hostel}</p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-muted/10 flex justify-between items-center"><span class="font-serif text-xl font-bold text-jade">₹${s.fixedRate} / ${s.selectedPlan}</span><span class="text-[10px] uppercase tracking-wider font-bold text-muted/80">Connect Channel →</span></div>
+        </div>
+      `).join('');
+    }
+
+    function triggerHandshakeModalCheckout(id) {
+      const targetNode = (JSON.parse(localStorage.getItem(CONFIG_KEYS.SESSIONS_CACHE)) || []).find(s => s.id === id);
+      if (!targetNode) return;
+
+      const isOccupied = targetNode.status === 'connected';
+      const coreModalContainer = document.getElementById('payment-modal-core');
+
+      if (isOccupied) {
+        coreModalContainer.innerHTML = `
+          <h3 class="font-serif text-xl font-bold mb-4 text-offWhite">🔒 SYPHR SECURE Handshake Injection Control</h3>
+          <p class="text-xs text-muted mb-6">Channel lease state confirmed active inside global cluster tracking map arrays.</p>
+          <div class="space-y-4">
+            <input type="text" id="access-key-field-token" class="w-full bg-darkBase border border-muted/20 font-mono text-center text-jade uppercase p-3 tracking-widest text-xs" placeholder="ENTER ACCESS PORTAL TOKEN KEY">
+            <button onclick="executeProxyIsolationTunnelBypass('${targetNode.id}')" class="w-full py-3.5 bg-jade text-darkBase text-xs uppercase font-bold tracking-widest">Verify & Deploy Proxy Tab Redirection</button>
+          </div>
+        `;
+      } else {
+        coreModalContainer.innerHTML = `
+          <h3 class="font-serif text-2xl font-bold mb-2">Checkout Processing Terminal</h3>
+          <p class="text-xs text-muted mb-6">Dynamic Payment Matrix Simulator Module Token Loop Engine (Beta Sandbox Rules)</p>
+          <div class="bg-darkBase p-4 border border-muted/10 mb-6 text-xs space-y-2">
+            <div class="flex justify-between"><span>Allocation Node Target:</span><span class="text-offWhite font-bold font-mono">${targetNode.id}</span></div>
+            <div class="flex justify-between"><span>Plan Duration Bracket:</span><span class="text-offWhite font-bold font-mono">${targetNode.selectedPlan}</span></div>
+            <div class="flex justify-between border-t border-muted/5 pt-2 text-sm"><span>Total Processing Fees:</span><span class="text-jade font-bold font-mono">₹${targetNode.fixedRate}.00</span></div>
+          </div>
+          <button onclick="processSimulatedVentureCheckout('${targetNode.id}', ${targetNode.fixedRate})" class="w-full py-3.5 bg-jade font-bold tracking-widest text-xs text-darkBase uppercase">Settle Simulated Payment Wallet Balance</button>
+        `;
+      }
+      document.getElementById('payment-modal').classList.remove('hidden');
+    }
+
+    async function processSimulatedVentureCheckout(id, rate) {
+      if (currentWalletBalance < rate) {
+        alert("🚫 Insufficient Balance inside virtual testing wallet!");
+        return;
+      }
+
+      try {
+        const payload = { streamId: id, billingAmount: rate, userLat: userCoordinatesCache.latitude, userLon: userCoordinatesCache.longitude };
+        const response = await fetch('http://localhost:5000/api/payment/checkout', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok) { alert(`🚫 Gateway Validation Error:\n${result.error}`); return; }
+        
+        // Deduct balance and update the UI container dynamically
+        currentWalletBalance -= rate;
+        document.getElementById('user-virtual-wallet').textContent = `₹${currentWalletBalance.toFixed(2)}`;
+
+        triggerAestheticToast(`💳 Transaction Cleared! Allocated Access Token: ${result.accessKey}`, "success");
+        closePaymentModal();
+        synchronizationStreamPipeline();
+      } catch(e) { triggerAestheticToast("Transaction dropped execution mapping.", "error"); }
+    }
+
+    function executeProxyIsolationTunnelBypass(id) {
+      const inputTokenField = document.getElementById('access-key-field-token').value.trim().toUpperCase();
+      if (!inputTokenField) return;
+
+      triggerAestheticToast("Handshake passed token loop! Deploying clean background environment container layer tab...", "success");
+      closePaymentModal();
+      
+      setTimeout(() => {
+        window.open(`http://localhost:5000/api/streams/render-tunnel/${id}?key=${inputTokenField}`, '_blank');
+      }, 600);
+    }
+
+    function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+
+    async function triggerAutomatedBroadcast() {
+      const title = document.getElementById('stream-title').value.trim();
+      const platformName = document.getElementById('stream-type').value;
+      const selectedPlan = document.getElementById('stream-plan').value;
+      const sessionCookie = document.getElementById('stream-cookies').value.trim();
+      const hostel = document.getElementById('stream-hostel').value.trim();
+
+      if (!title || !sessionCookie) { triggerAestheticToast("Mandatory state parameters missing.", "error"); return; }
+
+      const payload = { title, platformName, selectedPlan, sessionCookie, hostel, userLat: userCoordinatesCache.latitude, userLon: userCoordinatesCache.longitude };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/streams/launch', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        if (response.ok) {
+          triggerAestheticToast("🟢 Ingested! Active Node array saved inside cache matrix registries.", "success");
+          document.getElementById('stream-title').value = '';
+          document.getElementById('stream-cookies').value = '';
+          document.getElementById('stream-hostel').value = '';
+          synchronizationStreamPipeline();
+        } else {
+          const badRes = await response.json();
+          alert(`🚫 Broadcast Refused: ${badRes.error}`);
+        }
+      } catch(e) { triggerAestheticToast("System registry dispatch failure.", "error"); }
+    }
+
+    function renderLenderClusterPool() {
+      const data = JSON.parse(localStorage.getItem(CONFIG_KEYS.SESSIONS_CACHE)) || [];
+      document.getElementById('lender-nodes-list').innerHTML = data.map(s => `
+        <div class="bg-darkBase border border-muted/10 p-4 text-xs font-mono space-y-2 animate-fade-in">
+          <div class="flex justify-between items-center"><span class="text-offWhite font-bold tracking-wide text-xs">${s.title}</span><button onclick="terminateVentureNode('${s.id}')" class="text-accent uppercase font-bold text-[10px] tracking-widest">Kill</button></div>
+          <p class="text-[10px] text-muted">Status Mapping Context: ${s.status.toUpperCase()}</p>
+          <div class="border border-jade/30 bg-jade/5 text-jade font-bold text-center text-[11px] p-2 tracking-widest uppercase">Accumulated passive Balance: ₹${parseFloat(s.accumulatedEarnings).toFixed(4)}</div>
+        </div>
+      `).join('');
+    }
+
+    async function terminateVentureNode(id) {
+      try {
+        await fetch(`http://localhost:5000/api/admin/streams/${id}`, { method: 'DELETE' });
+        triggerAestheticToast("Flushed structural reference tracing parameters.", "success");
+        synchronizationStreamPipeline();
+      } catch(e) { console.error(e); }
+    }
+
+    function renderControlTowerPanel() {
+      const data = JSON.parse(localStorage.getItem(CONFIG_KEYS.SESSIONS_CACHE)) || [];
+      document.getElementById('admin-nodes-table').innerHTML = data.map(s => `
+        <div class="px-4 py-3 text-xs flex justify-between items-center font-mono">
+          <div><p class="font-bold text-jade">${s.title}</p><p class="text-muted text-[10px]">Registry Target Code Address Variable ID: [${s.id}]</p></div>
+          <button onclick="terminateVentureNode('${s.id}')" class="border border-accent text-accent bg-accent/5 px-3 py-1 font-bold text-[10px]">REVOKE ROUTE</button>
+        </div>
+      `).join('');
+      document.getElementById('security-logger').innerHTML = data.map(s => `<p class="py-1 border-b border-muted/5 font-mono text-muted text-[10px]">> Tracking Node Vector Array updated mapping parameters to state loop: ${s.status.toUpperCase()}</p>`).join('');
+    }
+
+    function triggerAestheticToast(msg, type) {
+      const toast = document.createElement('div');
+      toast.className = `p-4 bg-carbon border border-muted/10 border-l-4 text-xs shadow-2xl flex gap-3 ${type === 'success' ? 'border-l-jade text-jade' : 'border-l-accent text-accent'}`;
+      toast.innerHTML = `<span>${msg}</span>`;
+      document.getElementById('toast-vault').appendChild(toast);
+      setTimeout(() => toast.remove(), 4500);
+    }
+
+    setInterval(() => {
+      if (!document.getElementById('main-screen').classList.contains('hidden')) synchronizationStreamPipeline();
+    }, 1000);
+  </script>
+</body>
+</html>
