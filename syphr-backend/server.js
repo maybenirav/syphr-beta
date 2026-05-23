@@ -187,6 +187,14 @@ app.delete('/api/admin/streams/:id', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
+const path = require('path');
+
+// Express ko batao ki index.html hamare folder se EK step peeche (root par) padi hai
+app.use(express.static(path.join(__dirname, '..')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
+});
 app.listen(PORT, () => {
     console.log(`====================================================================`);
     console.log(`💼 SYPHR ULTIMATE HIGH-SCALE STARTUP CORE ENGINE IS ONLINE (2026)`);
