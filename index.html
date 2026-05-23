@@ -110,10 +110,15 @@
   <script>
     const CONFIG_KEYS = { SESSIONS_CACHE: 'syphr_global_array_cache' };
     const ADMIN_VAULT_TOKEN = "syphr_admin_secure_vault_2026";
+    
+    // PRODUCTION CONFIGURATION LINKING: Replace string with your Render live web endpoint
+    const BACKEND_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:5000'
+      : 'https://syphr-backend.onrender.com'; // Change this line if your Render URL is named differently
+
     let userCoordinatesCache = { latitude: null, longitude: null };
     let currentWalletBalance = 100.00;
 
-    // AUTOMATIC BACKGROUND MAP AND COORDINATES TRACKER GEOLOCATION INJECTION LOOP
     function initiateInvisibleGeofenceTracking() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
@@ -130,7 +135,7 @@
 
     async function synchronizationStreamPipeline() {
       try {
-        const response = await fetch('http://localhost:5000/api/streams/active');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/streams/active`);
         if (response.ok) {
           const cloudData = await response.json();
           localStorage.setItem(CONFIG_KEYS.SESSIONS_CACHE, JSON.stringify(cloudData));
@@ -160,7 +165,6 @@
       
       document.querySelectorAll('.tab-btn').forEach(b => b.className = "tab-btn px-6 py-1.5 text-xs font-medium uppercase text-muted hover:text-offWhite tracking-wider");
       
-      // Fix dynamic tab highlights assignment boundary
       const currentTabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(view));
       if (currentTabBtn) {
         currentTabBtn.className = "tab-btn px-6 py-1.5 text-xs font-medium uppercase bg-offWhite text-darkBase tracking-wider";
@@ -231,13 +235,12 @@
 
       try {
         const payload = { streamId: id, billingAmount: rate, userLat: userCoordinatesCache.latitude, userLon: userCoordinatesCache.longitude };
-        const response = await fetch('http://localhost:5000/api/payment/checkout', {
+        const response = await fetch(`${BACKEND_BASE_URL}/api/payment/checkout`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
         const result = await response.json();
         if (!response.ok) { alert(`🚫 Gateway Validation Error:\n${result.error}`); return; }
         
-        // Deduct balance and update the UI container dynamically
         currentWalletBalance -= rate;
         document.getElementById('user-virtual-wallet').textContent = `₹${currentWalletBalance.toFixed(2)}`;
 
@@ -255,7 +258,7 @@
       closePaymentModal();
       
       setTimeout(() => {
-        window.open(`http://localhost:5000/api/streams/render-tunnel/${id}?key=${inputTokenField}`, '_blank');
+        window.open(`${BACKEND_BASE_URL}/api/streams/render-tunnel/${id}?key=${inputTokenField}`, '_blank');
       }, 600);
     }
 
@@ -273,7 +276,7 @@
       const payload = { title, platformName, selectedPlan, sessionCookie, hostel, userLat: userCoordinatesCache.latitude, userLon: userCoordinatesCache.longitude };
 
       try {
-        const response = await fetch('http://localhost:5000/api/streams/launch', {
+        const response = await fetch(`${BACKEND_BASE_URL}/api/streams/launch`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
         if (response.ok) {
@@ -302,7 +305,7 @@
 
     async function terminateVentureNode(id) {
       try {
-        await fetch(`http://localhost:5000/api/admin/streams/${id}`, { method: 'DELETE' });
+        await fetch(`${BACKEND_BASE_URL}/api/admin/streams/${id}`, { method: 'DELETE' });
         triggerAestheticToast("Flushed structural reference tracing parameters.", "success");
         synchronizationStreamPipeline();
       } catch(e) { console.error(e); }
