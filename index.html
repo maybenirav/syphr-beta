@@ -111,10 +111,8 @@
     const CONFIG_KEYS = { SESSIONS_CACHE: 'syphr_global_array_cache' };
     const ADMIN_VAULT_TOKEN = "syphr_admin_secure_vault_2026";
     
-    // PRODUCTION CONFIGURATION LINKING: Replace string with your Render live web endpoint
-    const BACKEND_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:5000'
-      : 'https://syphr-backend.onrender.com'; // Change this line if your Render URL is named differently
+    // Dynamic absolute routing configuration to match the exact same Render host
+    const BACKEND_BASE_URL = window.location.origin;
 
     let userCoordinatesCache = { latitude: null, longitude: null };
     let currentWalletBalance = 100.00;
